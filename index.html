@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Calculator · Budget App</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+        body {
+            background: #eef2f7;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 25px -8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 560px;
+            padding: 1.8rem 2rem;
+        }
+        h1 { font-size: 1.4rem; color: #1e293b; margin-bottom: 0.2rem; }
+        .subhead { color: #64748b; font-size: 0.85rem; margin-bottom: 0.8rem; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; font-size: 0.8rem; font-weight: 500; color: #334155; margin-bottom: 0.3rem; }
+        input {
+            width: 100%;
+            padding: 0.65rem 0.9rem;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.15s;
+        }
+        input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12); }
+        .btn {
+            background: #1e293b;
+            color: white;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.7rem 1.2rem;
+            border: none;
+            border-radius: 30px;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        .btn:hover { background: #0f172a; }
+        .btn-calc { background: #3b82f6; }
+        .btn-calc:hover { background: #2563eb; }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            margin-bottom: 1.4rem;
+            border: 1px solid #e2e8f0;
+        }
+        .navbar span { font-weight: 500; color: #0f172a; font-size: 0.9rem; }
+        .btn-logout {
+            background: transparent;
+            border: 1.5px solid #e2e8f0;
+            color: #334155;
+            padding: 0.35rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            width: auto;
+        }
+        .btn-logout:hover { background: #eef2f6; border-color: #94a3b8; }
+
+        .balance-box {
+            background: #f1f5f9;
+            border-radius: 14px;
+            padding: 0.85rem 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1.2rem 0 0.7rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border: 1px solid #e2e8f0;
+        }
+        .balance-amount { font-size: 1.3rem; font-weight: 700; color: #0f172a; }
+
+        .expense-grid { display: flex; flex-direction: column; gap: 0.7rem; margin: 1.2rem 0 0.8rem; }
+        .expense-row { display: flex; align-items: center; gap: 0.7rem; }
+        .expense-row label { width: 130px; margin-bottom: 0; font-weight: 500; color: #1e293b; font-size: 0.85rem; }
+        .expense-row input { flex: 1; padding: 0.6rem 0.85rem; }
+
+        .insufficient {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 0.75rem 1rem;
+            border-radius: 14px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-top: 0.9rem;
+            border: 1px solid #fecaca;
+            display: none;
+        }
+        .message {
+            margin-top: 0.9rem;
+            padding: 0.6rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            text-align: center;
+            display: none;
+        }
+        .message.error { background: #fee2e2; color: #b91c1c; display: block; }
+        .message.success { background: #dcfce7; color: #166534; display: block; }
+
+        .hidden { display: none !important; }
+        hr { border: none; border-top: 1px solid #e9eef3; margin: 1rem 0; }
+        h3 { font-size: 1rem; margin-bottom: 0.6rem; color: #0f172a; }
+    </style>
+</head>
+<body onload="initBudgetPage()">
+    <div class="card">
+        <div class="navbar">
+            <span id="greeting">Hey, user!</span>
+            <button class="btn-logout" onclick="logoutUser()">Logout</button>
+        </div>
+
+        <h1>Budget calculator</h1>
+        <div class="subhead">Enter income and track expenses</div>
+        <div class="form-group">
+            <label for="totalIncome">Total Income (R)</label>
+            <input type="number" id="totalIncome" placeholder="e.g. 5000" min="0" step="0.01">
+        </div>
+        <button class="btn btn-calc" onclick="calculateIncome()">Calculate income</button>
+
+        <div id="incomeDisplay" class="balance-box hidden">
+            <span>Your income</span>
+            <span class="balance-amount" id="incomeValue">R 0.00</span>
+        </div>
+        <div id="expensesSection" class="hidden">
+            <hr>
+            <h3>Expenses</h3>
+            <div class="expense-grid">
+                <div class="expense-row">
+                    <label for="rent">Rent (F)</label>
+                    <input type="number" id="rent" placeholder="0.00" min="0" step="0.01" value="0">
+                </div>
+                <div class="expense-row">
+                    <label for="groceries">Groceries (F)</label>
+                    <input type="number" id="groceries" placeholder="0.00" min="0" step="0.01" value="0">
+                </div>
+                <div class="expense-row">
+                    <label for="transport">Transportation (R)</label>
+                    <input type="number" id="transport" placeholder="0.00" min="0" step="0.01" value="0">
+                </div>
+                <div class="expense-row">
+                    <label for="entertainment">Entertainment (R)</label>
+                    <input type="number" id="entertainment" placeholder="0.00" min="0" step="0.01" value="0">
+                </div>
+                <div class="expense-row">
+                    <label for="other">Other Expenses (7)</label>
+                    <input type="number" id="other" placeholder="0.00" min="0" step="0.01" value="0">
+                </div>
+            </div>
+            <button class="btn" onclick="calculateBalance()">Calculate balance</button>
+
+            <div id="balanceResult" class="balance-box">
+                <span>Balance</span>
+                <span class="balance-amount" id="balanceAmount">R 0.00</span>
+            </div>
+            <div id="balanceMessage" class="message"></div>
+            <div id="insufficientMessage" class="insufficient">
+                ⚠️ Insufficient balance — you have overspent!
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
