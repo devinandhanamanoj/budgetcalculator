@@ -1,185 +1,629 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Budget Calculator · Budget App</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
-        body {
-            background: #eef2f7;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-        .card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 25px -8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 560px;
-            padding: 1.8rem 2rem;
-        }
-        h1 { font-size: 1.4rem; color: #1e293b; margin-bottom: 0.2rem; }
-        .subhead { color: #64748b; font-size: 0.85rem; margin-bottom: 0.8rem; }
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; font-size: 0.8rem; font-weight: 500; color: #334155; margin-bottom: 0.3rem; }
-        input {
-            width: 100%;
-            padding: 0.65rem 0.9rem;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            outline: none;
-            transition: 0.15s;
-        }
-        input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12); }
-        .btn {
-            background: #1e293b;
-            color: white;
-            font-weight: 500;
-            font-size: 0.95rem;
-            padding: 0.7rem 1.2rem;
-            border: none;
-            border-radius: 30px;
-            width: 100%;
-            cursor: pointer;
-            margin-top: 0.5rem;
-        }
-        .btn:hover { background: #0f172a; }
-        .btn-calc { background: #3b82f6; }
-        .btn-calc:hover { background: #2563eb; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budget Calculator • FinWise</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f8fafc;
-            padding: 0.5rem 1rem;
-            border-radius: 40px;
-            margin-bottom: 1.4rem;
-            border: 1px solid #e2e8f0;
-        }
-        .navbar span { font-weight: 500; color: #0f172a; font-size: 0.9rem; }
-        .btn-logout {
-            background: transparent;
-            border: 1.5px solid #e2e8f0;
-            color: #334155;
-            padding: 0.35rem 1rem;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            cursor: pointer;
-            width: auto;
-        }
-        .btn-logout:hover { background: #eef2f6; border-color: #94a3b8; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(145deg, #f0f7f0 0%, #e2efe5 100%);
+      min-height: 100vh;
+      padding: 1.5rem;
+      color: #1e2e24;
+    }
 
-        .balance-box {
-            background: #f1f5f9;
-            border-radius: 14px;
-            padding: 0.85rem 1.2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 1.2rem 0 0.7rem;
-            font-weight: 500;
-            font-size: 0.9rem;
-            border: 1px solid #e2e8f0;
-        }
-        .balance-amount { font-size: 1.3rem; font-weight: 700; color: #0f172a; }
+    .app-container {
+      max-width: 1250px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      border-radius: 2rem;
+      box-shadow: 0 25px 40px -12px rgba(20, 50, 30, 0.25), 0 8px 18px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(140, 180, 140, 0.3);
+      padding: 1.8rem;
+    }
 
-        .expense-grid { display: flex; flex-direction: column; gap: 0.7rem; margin: 1.2rem 0 0.8rem; }
-        .expense-row { display: flex; align-items: center; gap: 0.7rem; }
-        .expense-row label { width: 130px; margin-bottom: 0; font-weight: 500; color: #1e293b; font-size: 0.85rem; }
-        .expense-row input { flex: 1; padding: 0.6rem 0.85rem; }
+    /* ---------- HEADER ---------- */
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 2px dashed #d5e7db;
+    }
 
-        .insufficient {
-            background: #fee2e2;
-            color: #b91c1c;
-            padding: 0.75rem 1rem;
-            border-radius: 14px;
-            text-align: center;
-            font-weight: 500;
-            font-size: 0.85rem;
-            margin-top: 0.9rem;
-            border: 1px solid #fecaca;
-            display: none;
-        }
-        .message {
-            margin-top: 0.9rem;
-            padding: 0.6rem 0.8rem;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            text-align: center;
-            display: none;
-        }
-        .message.error { background: #fee2e2; color: #b91c1c; display: block; }
-        .message.success { background: #dcfce7; color: #166534; display: block; }
+    .header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1c4b2e;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .header h1 i { color: #2d6a4f; }
 
-        .hidden { display: none !important; }
-        hr { border: none; border-top: 1px solid #e9eef3; margin: 1rem 0; }
-        h3 { font-size: 1rem; margin-bottom: 0.6rem; color: #0f172a; }
-    </style>
+    .welcome-badge {
+      background: #cfe9d8;
+      color: #1c4b2e;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.4rem;
+    }
+
+    .logout-btn {
+      background: transparent;
+      border: 1.5px solid #d0e0d4;
+      color: #3a5e4a;
+      padding: 0.6rem 1.4rem;
+      border-radius: 30px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Inter', sans-serif;
+    }
+    .logout-btn:hover { background: #f2f9f4; border-color: #94b8a2; }
+
+    /* ---------- GREETING BAR ---------- */
+    .greeting-bar {
+      background: linear-gradient(90deg, #2d6a4f, #1c4b2e);
+      color: white;
+      padding: 0.85rem 1.4rem;
+      border-radius: 14px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 8px 16px -8px rgba(28, 75, 46, 0.5);
+    }
+
+    /* ---------- TOP ROW: SAVINGS + ADD FORMS ---------- */
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 900px) { .row { grid-template-columns: 1fr; } }
+
+    .card {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 12px 24px -14px rgba(0, 0, 0, 0.15);
+      border: 1px solid #dfece3;
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #1c4b2e;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Savings card */
+    .balance-card {
+      background: linear-gradient(135deg, #eaf7ef, #d8efe1);
+      border: 1px solid #b8dcc6;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+    .balance-card h3 { justify-content: center; color: #1c4b2e; }
+    .balance-value {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #1c6b3f;
+      margin-top: 0.3rem;
+      letter-spacing: -1px;
+    }
+    .balance-value.negative { color: #c44536; }
+
+    /* Inputs */
+    .input-group { margin-bottom: 0.85rem; }
+    .input-group input {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      border: 1.5px solid #cfe3d4;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      color: #1e2e24;
+      transition: 0.2s;
+      background: #fafdfb;
+    }
+    .input-group input:focus {
+      outline: none;
+      border-color: #2d6a4f;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.12);
+    }
+
+    .small-btn {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      color: white;
+    }
+    .btn-income {
+      background: #2d6a4f;
+      box-shadow: 0 6px 12px -6px rgba(45, 106, 79, 0.5);
+    }
+    .btn-income:hover { background: #1c4b2e; transform: translateY(-1px); }
+
+    .btn-expense {
+      background: #c44536;
+      box-shadow: 0 6px 12px -6px rgba(196, 69, 54, 0.5);
+    }
+    .btn-expense:hover { background: #a1362a; transform: translateY(-1px); }
+
+    /* ---------- TABLES ---------- */
+    .tables-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 800px) { .tables-row { grid-template-columns: 1fr; } }
+
+    .table-card {
+      background: white;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      border: 1px solid #dfece3;
+      box-shadow: 0 12px 24px -14px rgba(0, 0, 0, 0.15);
+    }
+
+    .table-header {
+      padding: 1rem 1.3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+    .table-header.income {
+      background: linear-gradient(135deg, #2d6a4f, #1c4b2e);
+    }
+    .table-header.expense {
+      background: linear-gradient(135deg, #c44536, #8f2e22);
+    }
+    .table-header h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      letter-spacing: 0.3px;
+    }
+    .table-header .total-tag {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      backdrop-filter: blur(4px);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    table thead th {
+      background: #f4faf6;
+      color: #3b5e4b;
+      padding: 0.65rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      border-bottom: 1px solid #e2efe6;
+    }
+    table thead th.amount-col,
+    table thead th.balance-col,
+    table thead th.action-col {
+      text-align: right;
+    }
+    table thead th.action-col { width: 40px; }
+
+    table tbody td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #eef6f1;
+      color: #2e4d3b;
+      vertical-align: middle;
+    }
+    table tbody tr:last-child td { border-bottom: none; }
+    table tbody tr:hover { background: #f9fdfa; }
+
+    table tbody td.amount-col,
+    table tbody td.balance-col {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+    }
+    table tbody td.balance-col { color: #557a64; }
+    table tbody td.action-col { text-align: right; }
+
+    table tbody td.type-col {
+      font-weight: 500;
+      color: #1e3f2c;
+    }
+
+    .amount-positive { color: #1c6b3f; font-weight: 600; }
+    .amount-negative { color: #c44536; font-weight: 600; }
+
+    .empty-row td {
+      text-align: center;
+      color: #8aa898;
+      font-style: italic;
+      padding: 1.5rem 1rem;
+      font-size: 0.87rem;
+    }
+
+    .delete-btn {
+      background: transparent;
+      border: none;
+      color: #c44536;
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 0.35rem 0.55rem;
+      border-radius: 8px;
+      transition: 0.2s;
+      opacity: 0.7;
+    }
+    .delete-btn:hover { background: #ffefed; opacity: 1; }
+
+    /* ---------- FOOTER ---------- */
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 2px dashed #d5e7db;
+      font-size: 0.85rem;
+      color: #557a64;
+    }
+    .footer a { color: #1c4b2e; text-decoration: none; font-weight: 600; }
+    .footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .app-container { padding: 1rem; border-radius: 1.5rem; }
+      .header { flex-direction: column; align-items: flex-start; }
+      .header h1 { font-size: 1.5rem; }
+      table thead th, table tbody td { padding: 0.6rem 0.7rem; font-size: 0.82rem; }
+    }
+  </style>
 </head>
-<body onload="initBudgetPage()">
-    <div class="card">
-        <div class="navbar">
-            <span id="greeting">Hey, user!</span>
-            <button class="btn-logout" onclick="logoutUser()">Logout</button>
+<body>
+  <div class="app-container">
+    <!-- HEADER -->
+    <div class="header">
+      <div>
+        <h1><i class="fas fa-seedling"></i> FinWise</h1>
+        <div class="welcome-badge">
+          <i class="fas fa-user-circle"></i>
+          <span id="userNameDisplay">User</span>
         </div>
-
-        <h1>Budget calculator</h1>
-        <div class="subhead">Enter income and track expenses</div>
-        <div class="form-group">
-            <label for="totalIncome">Total Income (R)</label>
-            <input type="number" id="totalIncome" placeholder="e.g. 5000" min="0" step="0.01">
-        </div>
-        <button class="btn btn-calc" onclick="calculateIncome()">Calculate income</button>
-
-        <div id="incomeDisplay" class="balance-box hidden">
-            <span>Your income</span>
-            <span class="balance-amount" id="incomeValue">R 0.00</span>
-        </div>
-        <div id="expensesSection" class="hidden">
-            <hr>
-            <h3>Expenses</h3>
-            <div class="expense-grid">
-                <div class="expense-row">
-                    <label for="rent">Rent (F)</label>
-                    <input type="number" id="rent" placeholder="0.00" min="0" step="0.01" value="0">
-                </div>
-                <div class="expense-row">
-                    <label for="groceries">Groceries (F)</label>
-                    <input type="number" id="groceries" placeholder="0.00" min="0" step="0.01" value="0">
-                </div>
-                <div class="expense-row">
-                    <label for="transport">Transportation (R)</label>
-                    <input type="number" id="transport" placeholder="0.00" min="0" step="0.01" value="0">
-                </div>
-                <div class="expense-row">
-                    <label for="entertainment">Entertainment (R)</label>
-                    <input type="number" id="entertainment" placeholder="0.00" min="0" step="0.01" value="0">
-                </div>
-                <div class="expense-row">
-                    <label for="other">Other Expenses (7)</label>
-                    <input type="number" id="other" placeholder="0.00" min="0" step="0.01" value="0">
-                </div>
-            </div>
-            <button class="btn" onclick="calculateBalance()">Calculate balance</button>
-
-            <div id="balanceResult" class="balance-box">
-                <span>Balance</span>
-                <span class="balance-amount" id="balanceAmount">R 0.00</span>
-            </div>
-            <div id="balanceMessage" class="message"></div>
-            <div id="insufficientMessage" class="insufficient">
-                ⚠️ Insufficient balance — you have overspent!
-            </div>
-        </div>
+      </div>
+      <button id="logoutBtn" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
     </div>
 
-    <script src="script.js"></script>
+    <!-- GREETING BAR -->
+    <div class="greeting-bar">
+      <i class="fas fa-hand-sparkles"></i>
+      <span id="greet">Welcome back!</span>
+    </div>
+
+    <!-- TOP ROW -->
+    <div class="row">
+      <!-- SAVINGS -->
+      <div class="card balance-card">
+        <h3><i class="fas fa-piggy-bank"></i> Your Savings</h3>
+        <div class="balance-value" id="savingsValue">₹0</div>
+        <p style="margin-top: 0.6rem; font-size: 0.85rem; color: #4b6e59;">
+          <span id="totalIncomeTag">Income: ₹0</span> &nbsp;|&nbsp;
+          <span id="totalExpenseTag">Expense: ₹0</span>
+        </p>
+      </div>
+
+      <!-- ADD INCOME -->
+      <div class="card">
+        <h3><i class="fas fa-arrow-down" style="color: #2d6a4f;"></i> Add Income</h3>
+        <div class="input-group">
+          <input list="itype" type="text" id="incType" placeholder="Description (e.g. Salary)">
+        </div>
+        <datalist id="itype">
+          <option value="Salary"></option>
+          <option value="Business"></option>
+          <option value="Freelance"></option>
+          <option value="Rental"></option>
+          <option value="Investment"></option>
+          <option value="Bonus"></option>
+          <option value="Gift"></option>
+          <option value="Other"></option>
+        </datalist>
+        <div class="input-group">
+          <input type="number" id="incAmount" placeholder="Enter Income (₹)" min="0" step="1">
+        </div>
+        <button class="small-btn btn-income" id="addIncomeBtn">
+          <i class="fas fa-plus"></i> Add Income
+        </button>
+      </div>
+
+      <!-- ADD EXPENSE -->
+      <div class="card">
+        <h3><i class="fas fa-arrow-up" style="color: #c44536;"></i> Add Expense</h3>
+        <div class="input-group">
+          <input list="etype" type="text" id="expType" placeholder="Description (e.g. Rent)">
+        </div>
+        <datalist id="etype">
+          <option value="Room Rent"></option>
+          <option value="Bike EMI"></option>
+          <option value="Other EMI"></option>
+          <option value="Loan"></option>
+          <option value="Petrol"></option>
+          <option value="Food"></option>
+          <option value="Groceries"></option>
+          <option value="Transport"></option>
+          <option value="Entertainment"></option>
+          <option value="Utilities"></option>
+          <option value="Medical"></option>
+          <option value="Education"></option>
+          <option value="Others"></option>
+        </datalist>
+        <div class="input-group">
+          <input type="number" id="expAmount" placeholder="Enter Expense (₹)" min="0" step="1">
+        </div>
+        <button class="small-btn btn-expense" id="addExpenseBtn">
+          <i class="fas fa-plus"></i> Add Expense
+        </button>
+      </div>
+    </div>
+
+    <!-- TABLES -->
+    <div class="tables-row">
+      <!-- INCOME TABLE -->
+      <div class="table-card">
+        <div class="table-header income">
+          <h4><i class="fas fa-arrow-down"></i> Income</h4>
+          <span class="total-tag" id="incomeTotalTag">₹0</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th class="amount-col">Amount</th>
+              <th class="balance-col">Balance</th>
+              <th class="action-col"></th>
+            </tr>
+          </thead>
+          <tbody id="incomeTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- EXPENSE TABLE -->
+      <div class="table-card">
+        <div class="table-header expense">
+          <h4><i class="fas fa-arrow-up"></i> Expense</h4>
+          <span class="total-tag" id="expenseTotalTag">₹0</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th class="amount-col">Amount</th>
+              <th class="balance-col">Balance</th>
+              <th class="action-col"></th>
+            </tr>
+          </thead>
+          <tbody id="expenseTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      © 2026 <a href="#">FinWise.com</a> — Budget Calculator
+    </div>
+  </div>
+
+  <script>
+    const USERS_KEY = 'finwise_users';
+    const CURRENT_USER_KEY = 'finwise_current_user';
+
+    // ---------- AUTH GUARD ----------
+    const currentEmail = localStorage.getItem(CURRENT_USER_KEY);
+    if (!currentEmail) window.location.href = 'login.html';
+
+    let users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+    let userIndex = users.findIndex(u => u.email === currentEmail);
+
+    if (userIndex === -1) {
+      localStorage.removeItem(CURRENT_USER_KEY);
+      window.location.href = 'login.html';
+    }
+
+    let currentUser = users[userIndex];
+    if (!currentUser.incomes) currentUser.incomes = [];
+    if (!currentUser.expenses) currentUser.expenses = [];
+
+    // ---------- SHOW USER NAME ----------
+    const displayName = currentUser.name || currentUser.email.split('@')[0];
+    document.getElementById('userNameDisplay').textContent = displayName;
+    document.getElementById('greet').textContent = `Welcome back, ${displayName}!`;
+
+    // ---------- HELPERS ----------
+    function saveUser() {
+      users[userIndex] = currentUser;
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    }
+
+    function formatINR(n) {
+      return '₹' + Number(n).toLocaleString('en-IN');
+    }
+
+    // ---------- RENDER ----------
+    function render() {
+      const incomeBody = document.getElementById('incomeTableBody');
+      const expenseBody = document.getElementById('expenseTableBody');
+
+      const totalIncome = currentUser.incomes.reduce((s, i) => s + Number(i.amount), 0);
+      const totalExpense = currentUser.expenses.reduce((s, e) => s + Number(e.amount), 0);
+
+      // Update header totals
+      document.getElementById('incomeTotalTag').textContent = formatINR(totalIncome);
+      document.getElementById('expenseTotalTag').textContent = formatINR(totalExpense);
+
+      // --- INCOME TABLE ---
+      incomeBody.innerHTML = '';
+      if (currentUser.incomes.length === 0) {
+        incomeBody.innerHTML = `<tr class="empty-row"><td colspan="4">No income added yet</td></tr>`;
+      } else {
+        let running = 0;
+        currentUser.incomes.forEach((item, idx) => {
+          running += Number(item.amount);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="type-col">${item.type || '—'}</td>
+            <td class="amount-col"><span class="amount-positive">+ ${formatINR(item.amount)}</span></td>
+            <td class="balance-col">${formatINR(running)}</td>
+            <td class="action-col">
+              <button class="delete-btn" data-kind="income" data-idx="${idx}" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          `;
+          incomeBody.appendChild(tr);
+        });
+      }
+
+      // --- EXPENSE TABLE ---
+      expenseBody.innerHTML = '';
+      if (currentUser.expenses.length === 0) {
+        expenseBody.innerHTML = `<tr class="empty-row"><td colspan="4">No expenses added yet</td></tr>`;
+      } else {
+        let running = 0;
+        currentUser.expenses.forEach((item, idx) => {
+          running += Number(item.amount);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="type-col">${item.type || '—'}</td>
+            <td class="amount-col"><span class="amount-negative">− ${formatINR(item.amount)}</span></td>
+            <td class="balance-col">${formatINR(running)}</td>
+            <td class="action-col">
+              <button class="delete-btn" data-kind="expense" data-idx="${idx}" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          `;
+          expenseBody.appendChild(tr);
+        });
+      }
+
+      // --- SAVINGS ---
+      const balance = totalIncome - totalExpense;
+      const savingsEl = document.getElementById('savingsValue');
+      savingsEl.textContent = formatINR(Math.abs(balance));
+      savingsEl.classList.toggle('negative', balance < 0);
+
+      document.getElementById('totalIncomeTag').textContent = 'Income: ' + formatINR(totalIncome);
+      document.getElementById('totalExpenseTag').textContent = 'Expense: ' + formatINR(totalExpense);
+
+      // Delete listeners
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const kind = btn.dataset.kind;
+          const idx = Number(btn.dataset.idx);
+          if (kind === 'income') currentUser.incomes.splice(idx, 1);
+          if (kind === 'expense') currentUser.expenses.splice(idx, 1);
+          saveUser();
+          render();
+        });
+      });
+    }
+
+    // ---------- ADD INCOME ----------
+    document.getElementById('addIncomeBtn').addEventListener('click', () => {
+      const type = document.getElementById('incType').value.trim();
+      const amount = parseFloat(document.getElementById('incAmount').value);
+
+      if (!type) { alert('Please enter an income description.'); return; }
+      if (!amount || amount <= 0) { alert('Please enter a valid amount.'); return; }
+
+      currentUser.incomes.push({ type, amount });
+      saveUser();
+      document.getElementById('incType').value = '';
+      document.getElementById('incAmount').value = '';
+      render();
+    });
+
+    // ---------- ADD EXPENSE ----------
+    document.getElementById('addExpenseBtn').addEventListener('click', () => {
+      const type = document.getElementById('expType').value.trim();
+      const amount = parseFloat(document.getElementById('expAmount').value);
+
+      if (!type) { alert('Please enter an expense description.'); return; }
+      if (!amount || amount <= 0) { alert('Please enter a valid amount.'); return; }
+
+      currentUser.expenses.push({ type, amount });
+      saveUser();
+      document.getElementById('expType').value = '';
+      document.getElementById('expAmount').value = '';
+      render();
+    });
+
+    // ---------- LOGOUT ----------
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem(CURRENT_USER_KEY);
+      window.location.href = 'login.html';
+    });
+
+    // Enter key shortcuts
+    document.getElementById('incAmount').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') document.getElementById('addIncomeBtn').click();
+    });
+    document.getElementById('expAmount').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') document.getElementById('addExpenseBtn').click();
+    });
+
+    // Initial render
+    render();
+  </script>
 </body>
 </html>

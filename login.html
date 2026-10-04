@@ -1,90 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login · Budget App</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
-        body {
-            background: #eef2f7;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-        .card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 25px -8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 420px;
-            padding: 1.8rem 2rem;
-        }
-        h1 { font-size: 1.5rem; color: #1e293b; margin-bottom: 0.2rem; }
-        .subhead { color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem; border-bottom: 1px solid #e9eef3; padding-bottom: 0.6rem; }
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; font-size: 0.8rem; font-weight: 500; color: #334155; margin-bottom: 0.3rem; }
-        input {
-            width: 100%;
-            padding: 0.65rem 0.9rem;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            outline: none;
-            transition: 0.15s;
-        }
-        input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12); }
-        .btn {
-            background: #1e293b;
-            color: white;
-            font-weight: 500;
-            font-size: 0.95rem;
-            padding: 0.7rem 1.2rem;
-            border: none;
-            border-radius: 30px;
-            width: 100%;
-            cursor: pointer;
-            margin-top: 0.5rem;
-        }
-        .btn:hover { background: #0f172a; }
-        .message {
-            margin-top: 0.9rem;
-            padding: 0.6rem 0.8rem;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            text-align: center;
-            display: none;
-        }
-        .message.error { background: #fee2e2; color: #b91c1c; display: block; }
-        .message.success { background: #dcfce7; color: #166534; display: block; }
-        .small-link { text-align: center; margin-top: 1.1rem; font-size: 0.85rem; color: #475569; }
-        .small-link a { color: #1e293b; font-weight: 500; text-decoration: none; border-bottom: 1px dashed #94a3b8; cursor: pointer; }
-        .small-link a:hover { border-bottom: 1px solid #1e293b; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login • FinWise</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(145deg, #f0f7f0 0%, #e2efe5 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 1200px;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(12px);
+      border-radius: 2.5rem;
+      box-shadow: 0 25px 40px -12px rgba(20, 50, 30, 0.25), 0 8px 18px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(140, 180, 140, 0.3);
+      padding: 1.8rem;
+    }
+
+    .split-layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: stretch;
+    }
+
+    .form-column {
+      flex: 1 1 320px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+    }
+
+    .image-column {
+      flex: 1 1 320px;
+      background: linear-gradient(135deg, #1c4b2e, #2d6a4f);
+      border-radius: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      min-height: 400px;
+    }
+
+    .image-column::after {
+      content: "💰";
+      font-size: 10rem;
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      opacity: 0.1;
+      transform: rotate(15deg);
+    }
+
+    .image-column .brand-icon {
+      font-size: 3.5rem;
+      background: rgba(255, 255, 255, 0.15);
+      width: 90px;
+      height: 90px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .image-column h2 { font-size: 2rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .image-column p { font-size: 1rem; opacity: 0.85; text-align: center; max-width: 250px; line-height: 1.5; }
+
+    .app-name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1c4b2e;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .app-name i { color: #2d6a4f; font-size: 2rem; }
+
+    h2 { font-size: 1.9rem; font-weight: 600; color: #0f2e1d; margin-bottom: 0.5rem; }
+    .subhead { color: #3b5e4b; margin-bottom: 2rem; font-size: 0.95rem; }
+
+    .input-group { margin-bottom: 1.3rem; }
+    .input-group label {
+      display: block;
+      font-weight: 500;
+      font-size: 0.85rem;
+      color: #1e3f2c;
+      margin-bottom: 0.45rem;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: 1.5px solid #cfe3d4;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      background: white;
+      transition: 0.2s;
+      color: #1e2e24;
+    }
+    .input-group input:focus {
+      outline: none;
+      border-color: #2d6a4f;
+      box-shadow: 0 0 0 4px rgba(45, 106, 79, 0.15);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 0.95rem 1.5rem;
+      border: none;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      background: #2d6a4f;
+      color: white;
+      box-shadow: 0 8px 16px -6px rgba(45, 106, 79, 0.4);
+      margin-top: 0.5rem;
+    }
+    .btn:hover {
+      background: #1c4b2e;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 20px -8px rgba(28, 75, 46, 0.5);
+    }
+
+    .message {
+      margin-top: 1.2rem;
+      padding: 0.75rem 1rem;
+      border-radius: 16px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .message.error { background: #ffefed; color: #b13e3e; border-left: 4px solid #d65b5b; }
+
+    .link-switch {
+      text-align: center;
+      margin-top: 1.8rem;
+      font-size: 0.9rem;
+      color: #3b5e4b;
+    }
+    .link-switch a {
+      color: #1c4b2e;
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1.5px solid #a8cfb8;
+      cursor: pointer;
+    }
+    .link-switch a:hover { color: #2d6a4f; border-bottom-color: #2d6a4f; }
+
+    @media (max-width: 900px) {
+      .app-container { padding: 1.2rem; border-radius: 2rem; }
+      .image-column { min-height: 280px; }
+    }
+    @media (max-width: 600px) {
+      .image-column { display: none; }
+    }
+  </style>
 </head>
 <body>
-    <div class="card">
-        <h1>Welcome back</h1>
-        <div class="subhead">Sign in to your budget account</div>
+  <div class="app-container">
+    <div class="split-layout">
+      <div class="form-column">
+        <div class="app-name"><i class="fas fa-seedling"></i> FinWise</div>
+        <h2>Welcome back</h2>
+        <p class="subhead">Log in to access your budget dashboard.</p>
 
-        <div class="form-group">
-            <label for="loginEmail">Email</label>
-            <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email">
-        </div>
-        <div class="form-group">
+        <form id="loginForm">
+          <div class="input-group">
+            <label for="loginEmail">Email address</label>
+            <input type="email" id="loginEmail" placeholder="you@example.com" required>
+          </div>
+          <div class="input-group">
             <label for="loginPassword">Password</label>
-            <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
-        </div>
-        <button class="btn" onclick="loginUser()">Log in</button>
-        <div id="loginMessage" class="message"></div>
+            <input type="password" id="loginPassword" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn"><i class="fas fa-arrow-right-to-bracket"></i> Login</button>
+          <div id="loginMessage" class="message" style="display: none;"></div>
+        </form>
 
-        <div class="small-link">
-            Don't have an account? <a href="register.html">Create one</a>
+        <div class="link-switch">
+          New to FinWise? <a href="register.html">Create an account</a>
         </div>
+      </div>
+
+      <div class="image-column">
+        <div class="brand-icon"><i class="fas fa-coins"></i></div>
+        <h2>Your budget, simplified.</h2>
+        <p>See where every rupee goes — income, expenses, and savings.</p>
+      </div>
     </div>
+  </div>
 
-    <script src="script.js"></script>
+  <script>
+    const USERS_KEY = 'finwise_users';
+    const CURRENT_USER_KEY = 'finwise_current_user';
+
+    function getUsers() {
+      return JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+    }
+
+    function showMessage(el, text, type) {
+      el.textContent = text;
+      el.className = `message ${type}`;
+      el.style.display = 'flex';
+      setTimeout(() => { el.style.display = 'none'; }, 4000);
+    }
+
+    if (localStorage.getItem(CURRENT_USER_KEY)) {
+      window.location.href = 'index.html';
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+      const password = document.getElementById('loginPassword').value;
+      const msg = document.getElementById('loginMessage');
+
+      if (!email || !password) {
+        showMessage(msg, 'Please enter email and password.', 'error');
+        return;
+      }
+
+      const users = getUsers();
+      const user = users.find(u => u.email === email && u.password === password);
+
+      if (!user) {
+        showMessage(msg, 'Invalid email or password.', 'error');
+        return;
+      }
+
+      localStorage.setItem(CURRENT_USER_KEY, user.email);
+      window.location.href = 'index.html';
+    });
+  </script>
 </body>
 </html>
