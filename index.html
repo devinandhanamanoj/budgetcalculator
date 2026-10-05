@@ -259,6 +259,7 @@
     table thead th.action-col {
       text-align: right;
     }
+    table thead th.time-col { text-align: left; }
     table thead th.action-col { width: 40px; }
 
     table tbody td {
@@ -282,6 +283,12 @@
     table tbody td.type-col {
       font-weight: 500;
       color: #1e3f2c;
+    }
+
+    table tbody td.time-col {
+      font-size: 0.8rem;
+      color: #6b8a7a;
+      white-space: nowrap;
     }
 
     .amount-positive { color: #1c6b3f; font-weight: 600; }
@@ -325,6 +332,7 @@
       .header { flex-direction: column; align-items: flex-start; }
       .header h1 { font-size: 1.5rem; }
       table thead th, table tbody td { padding: 0.6rem 0.7rem; font-size: 0.82rem; }
+      table tbody td.time-col { font-size: 0.72rem; }
     }
   </style>
 </head>
@@ -428,6 +436,7 @@
           <thead>
             <tr>
               <th>Type</th>
+              <th class="time-col">Time</th>
               <th class="amount-col">Amount</th>
               <th class="balance-col">Balance</th>
               <th class="action-col"></th>
@@ -447,6 +456,7 @@
           <thead>
             <tr>
               <th>Type</th>
+              <th class="time-col">Time</th>
               <th class="amount-col">Amount</th>
               <th class="balance-col">Balance</th>
               <th class="action-col"></th>
@@ -498,6 +508,20 @@
       return '₹' + Number(n).toLocaleString('en-IN');
     }
 
+    // Format a timestamp into a readable date-time string
+    function formatDateTime(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      let hours = d.getHours();
+      const mins = String(d.getMinutes()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12;
+      return `${day}/${month}/${year} ${hours}:${mins} ${ampm}`;
+    }
+
     // ---------- RENDER ----------
     function render() {
       const incomeBody = document.getElementById('incomeTableBody');
@@ -513,7 +537,7 @@
       // --- INCOME TABLE ---
       incomeBody.innerHTML = '';
       if (currentUser.incomes.length === 0) {
-        incomeBody.innerHTML = `<tr class="empty-row"><td colspan="4">No income added yet</td></tr>`;
+        incomeBody.innerHTML = `<tr class="empty-row"><td colspan="5">No income added yet</td></tr>`;
       } else {
         let running = 0;
         currentUser.incomes.forEach((item, idx) => {
@@ -521,6 +545,7 @@
           const tr = document.createElement('tr');
           tr.innerHTML = `
             <td class="type-col">${item.type || '—'}</td>
+            <td class="time-col">${formatDateTime(item.time)}</td>
             <td class="amount-col"><span class="amount-positive">+ ${formatINR(item.amount)}</span></td>
             <td class="balance-col">${formatINR(running)}</td>
             <td class="action-col">
@@ -536,7 +561,7 @@
       // --- EXPENSE TABLE ---
       expenseBody.innerHTML = '';
       if (currentUser.expenses.length === 0) {
-        expenseBody.innerHTML = `<tr class="empty-row"><td colspan="4">No expenses added yet</td></tr>`;
+        expenseBody.innerHTML = `<tr class="empty-row"><td colspan="5">No expenses added yet</td></tr>`;
       } else {
         let running = 0;
         currentUser.expenses.forEach((item, idx) => {
@@ -544,6 +569,7 @@
           const tr = document.createElement('tr');
           tr.innerHTML = `
             <td class="type-col">${item.type || '—'}</td>
+            <td class="time-col">${formatDateTime(item.time)}</td>
             <td class="amount-col"><span class="amount-negative">− ${formatINR(item.amount)}</span></td>
             <td class="balance-col">${formatINR(running)}</td>
             <td class="action-col">
@@ -586,7 +612,7 @@
       if (!type) { alert('Please enter an income description.'); return; }
       if (!amount || amount <= 0) { alert('Please enter a valid amount.'); return; }
 
-      currentUser.incomes.push({ type, amount });
+      currentUser.incomes.push({ type, amount, time: new Date().toISOString() });
       saveUser();
       document.getElementById('incType').value = '';
       document.getElementById('incAmount').value = '';
@@ -601,7 +627,7 @@
       if (!type) { alert('Please enter an expense description.'); return; }
       if (!amount || amount <= 0) { alert('Please enter a valid amount.'); return; }
 
-      currentUser.expenses.push({ type, amount });
+      currentUser.expenses.push({ type, amount, time: new Date().toISOString() });
       saveUser();
       document.getElementById('expType').value = '';
       document.getElementById('expAmount').value = '';
